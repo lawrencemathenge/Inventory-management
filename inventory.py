@@ -1,12 +1,13 @@
-from sqlalchemy import create_engine, Column, Integer, String, Float, ForeignKey
+from sqlalchemy import create_engine, Column, Integer, String, Float, ForeignKe
+from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import declarative_base, sessionmaker, relationship
 
 # Database configuration
-DATABASE_URL = "sqlite:///./warehouse.db"  # Use SQLite for simplicity; change for production
-engine = create_engine(DATABASE_URL)
+DATABASE= "sqlite:///./warehouse.db"
+engine = create_engine(DATABASE)
 Base = declarative_base()
 
-# Define models
+# create table
 class Product(Base):
     __tablename__ = "products"
 
@@ -47,7 +48,7 @@ Base.metadata.create_all(bind=engine)
 # Session
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-def distribute_stocks(db: Session):
+def distribute_stocks(db: sessionmaker):
     """Distributes stock to branches based on sales targets and current stock."""
 
     products = db.query(Product).all()
@@ -114,4 +115,4 @@ for product in db.query(Product).all():
     for branch_stock in product.branch_stocks:
         print(f"  Branch: {branch_stock.branch.name}, Stock: {branch_stock.stock_level}")
 
-db.close()
+SessionLocal.close()

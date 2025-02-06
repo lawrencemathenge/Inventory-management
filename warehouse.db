@@ -1,2 +1,3 @@
-class warehouse:
-__int__(self,
+import pandas as pd
+directory=c/
+df=pd.read_csv(directory)
