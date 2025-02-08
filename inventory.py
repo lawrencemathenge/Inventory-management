@@ -1,9 +1,10 @@
-from sqlalchemy import create_engine, Column, Integer, String, Float, ForeignKe
+from sqlalchemy import create_engine, Column, Integer, String, Float, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import declarative_base, sessionmaker, relationship
+from sqlalchemy import ForeignKey
 
 # Database configuration
-DATABASE= "sqlite:///./warehouse.db"
+DATABASE= "sqlite:///warehouse.db"
 engine = create_engine(DATABASE)
 Base = declarative_base()
 
@@ -15,7 +16,16 @@ class Product(Base):
     name = Column(String, unique=True, index=True)
     unit_price = Column(Float)
     stock_level = Column(Integer)  # Overall stock in the warehouse
-
+    
+    def __int__(self,id,name,unit_price,stock_level):
+        self.id=id
+        self.name=name
+        self.unit_price=unit_price
+        self.stock_level=stock_level
+        
+        def __repr__(self):
+          return f"({self.id}) {(self.name)} {(self.unit_price)}{(self.stock_level)}"
+        
     # Relationship to branch stocks (back_populates for two-way relationship)
     branch_stocks = relationship("BranchStock", back_populates="product")
 
@@ -24,21 +34,32 @@ class Branch(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, unique=True, index=True)
-    sales_target = Column(Integer) # Example: weekly sales target
-
+    sales_target = Column(Integer) # : weekly sales target
+    def __int__(self,id,name,sales_target):
+        self.id=id
+        self.name=name
+        self.sales_target=sales_target
+        def __repr__(self):
+          return f"({self.id}) {(self.name)} {(self.sales_target)}"
+        
     # Relationship to branch stocks (back_populates for two-way relationship)
     branch_stocks = relationship("BranchStock", back_populates="branch")
 
-
 class BranchStock(Base):  # Junction table for many-to-many relationship
     __tablename__ = "branch_stocks"
+    product_id = Column(Integer, ForeignKey ("products.id"), primary_key=True)
+branch_id = Column(Integer, ForeignKey ("branches.id"), primary_key=True)
+stock_level = Column(Integer) #stock at this branch
 
-    product_id = Column(Integer, ForeignKey("products.id"), primary_key=True)
-    branch_id = Column(Integer, ForeignKey("branches.id"), primary_key=True)
-    stock_level = Column(Integer)  # Stock at this branch
-
-    product = relationship("Product", back_populates="branch_stocks")
-    branch = relationship("Branch", back_populates="branch_stocks")
+def __init(self,product_id,branch_id):
+        self.product_id=product_id
+        self.branch_id=branch_id
+    
+        def __repr__(self):
+          return f"({self.product.id}) {(self.branch.id)}"
+      
+product = relationship("Product", back_populates="branch_stocks")
+branch = relationship("Branch", back_populates="branch_stocks")
 
 
 
@@ -95,8 +116,8 @@ def distribute_stocks(db: sessionmaker):
 db = SessionLocal()
 
 # Add some products and branches (if they don't exist)
-product1 = Product(name="Laptop", unit_price=1200.00, stock_level=100)
-product2 = Product(name="Mouse", unit_price=25.00, stock_level=200)
+product1 = Product(name="Laptop", unit_price=25000.00, stock_level=100)
+product2 = Product(name="Mouse", unit_price=750.00, stock_level=2000)
 db.add_all([product1, product2])
 db.commit()
 
