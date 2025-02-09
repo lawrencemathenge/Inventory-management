@@ -1,11 +1,9 @@
 from sqlalchemy import create_engine, Column, Integer, String, Float, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import declarative_base, sessionmaker, relationship
-from sqlalchemy import ForeignKey
 
 # Database configuration
-DATABASE= "sqlite:///warehouse.db"
-engine = create_engine(DATABASE)
+engine=create_engine("sqlite:///warehouse.db")
 Base = declarative_base()
 
 # create table
@@ -110,7 +108,7 @@ def distribute_stocks(db: sessionmaker):
                 remaining_stock -= stock_to_distribute
             product.stock_level = remaining_stock # update overall stock
 
-        db.commit() # commit changes for every product.
+        SessionLocal.commit()
 
 # Example usage:
 db = SessionLocal()

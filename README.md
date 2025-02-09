@@ -1,5 +1,5 @@
 # Inventory-management
-Clearer Database Structure: Uses a junction table (BranchStock) to explicitly manage the many-to-many relationship between products and branches. This is the standard and most efficient way to model this kind of relationship in a relational database.
+Clearer Database Structure: Uses a junction table (BranchStock) to explicitly manage the many-to-many relationship between products and branches.
 
 Sales Targets: Added sales_target to the Branch model.  The stock distribution now uses these targets to allocate stock proportionally.
 
@@ -19,7 +19,7 @@ Initialization of Branch Stock: The code now correctly initializes a BranchStock
 
 Example Usage: Provides a more complete example of how to add products and branches and then call the distribute_stocks function.  It also demonstrates how to query and print the stock levels after distribution.
 
-SQLite for Simplicity: Uses SQLite for demonstration purposes.  It's easy to set up and doesn't require a separate database server.  For a production environment, you would want to use a more robust database like PostgreSQL, MySQL, or others.  Just change the DATABASE_URL.
+SQLite for Simplicity: Uses SQLite for demonstration purposes.
 
 Relationship Management: Uses SQLAlchemy's relationship features (relationship()) and back_populates to manage the relationships between the models efficiently.  This makes it easy to access related data (e.g., getting the branch of a branch stock).
 
